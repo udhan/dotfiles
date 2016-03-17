@@ -28,9 +28,6 @@
 ;; Shift-arrow keys for moving between visible buffers
 (windmove-default-keybindings)
 
-;; Sidebar
-;;(autoload 'sr-speedbar 1)
-
 ;; Theme
 (require 'eink-theme)
 
@@ -47,11 +44,6 @@
 ;; Evil mode
 (require 'evil)
 (evil-mode t)
-
-;; Quick search with 2 characters
-;;(require 'evil-snipe)
-;;(evil-snipe-mode 1)
-;;(evil-snipe-override-mode 1)
 
 ;; Change cursor color based on evil mode, cool!
 (setq evil-emacs-state-cursor '("red" box))
@@ -111,7 +103,6 @@
 (setq org-todo-keywords
       (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
               (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
 
 (setq org-todo-state-tags-triggers
       (quote (("CANCELLED" ("CANCELLED" . t))
