@@ -9,7 +9,7 @@
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 (setq inhibit-startup-message t)
 
-(setq debug-on-error f)
+;;(setq debug-on-error t)
 
 ;; Save all tempfiles in $TMPDIR/emacs$UID
 (defconst emacs-tmp-dir (format "%s%s%s/" temporary-file-directory "emacs" (user-uid)))
@@ -29,12 +29,12 @@
 (windmove-default-keybindings)
 
 ;; Theme
-(require 'eink-theme)
+;; (require 'eink-theme)
 
-;; (require 'solarized-theme)
-;; (setq solarized-use-variable-pitch nil)
-;; (setq solarized-scale-org-headlines nil)
-;;(load-theme 'solarized-light t)
+ (require 'solarized-theme)
+ (setq solarized-use-variable-pitch nil)
+ (setq solarized-scale-org-headlines nil)
+(load-theme 'solarized-light t)
 
 ;; Adjust font based on screen resolution
 (if (= (display-pixel-height) 2048)
