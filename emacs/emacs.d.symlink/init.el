@@ -86,6 +86,8 @@
 (require 'smart-mode-line)
 (sml/setup)
 
+(require 'smartparens-config)
+
 ;; Org mode
 (require 'org)
 (setq org-agenda-files
