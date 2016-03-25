@@ -1,5 +1,6 @@
 (require 'cask "/home/mithun/.cask/cask.el")
 (cask-initialize)
+
 (require 'pallet)
 (pallet-mode t)
 
@@ -14,9 +15,9 @@
 ;; Save all tempfiles in $TMPDIR/emacs$UID
 (defconst emacs-tmp-dir (format "%s%s%s/" temporary-file-directory "emacs" (user-uid)))
 (setq backup-directory-alist
-        `((".*" . ,emacs-tmp-dir)))
+      `((".*" . ,emacs-tmp-dir)))
 (setq auto-save-file-name-transforms
-        `((".*" ,emacs-tmp-dir t)))
+      `((".*" ,emacs-tmp-dir t)))
 
 (setq auto-save-list-file-prefix emacs-tmp-dir)
 
@@ -30,16 +31,15 @@
 
 ;; Theme
 ;; (require 'eink-theme)
-
- (require 'solarized-theme)
- (setq solarized-use-variable-pitch nil)
- (setq solarized-scale-org-headlines nil)
+(require 'solarized-theme)
+(setq solarized-use-variable-pitch nil)
+(setq solarized-scale-org-headlines nil)
 (load-theme 'solarized-light t)
 
 ;; Adjust font based on screen resolution
 (if (= (display-pixel-height) 2048)
     (set-default-font "Source Code Pro 20")
-    (set-default-font "Source Code Pro 13"))
+  (set-default-font "Source Code Pro 13"))
 
 ;; Evil mode
 (require 'evil)
@@ -87,41 +87,3 @@
 (sml/setup)
 
 (require 'smartparens-config)
-
-;; Org mode
-(require 'org)
-(setq org-agenda-files
-      (quote ("~/org")))
-(setq org-default-notes-file "~/todo.org")
-(setq org-use-fast-todo-selection t)
-
-;; Standard key bindings
-(global-set-key "\C-cl" 'org-store-link)
-(global-set-key "\C-ca" 'org-agenda)
-(global-set-key "\C-cb" 'org-iswitchb)
-(global-set-key (kbd "<f12>") 'org-agenda)
-(global-set-key (kbd "C-c c") 'org-capture)
-
-(setq org-todo-keywords
-      (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
-              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)" "PHONE" "MEETING"))))
-
-(setq org-todo-state-tags-triggers
-      (quote (("CANCELLED" ("CANCELLED" . t))
-              ("WAITING" ("WAITING" . t))
-              ("HOLD" ("WAITING") ("HOLD" . t))
-              (done ("WAITING") ("HOLD"))
-              ("TODO" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("NEXT" ("WAITING") ("CANCELLED") ("HOLD"))
-              ("DONE" ("WAITING") ("CANCELLED") ("HOLD")))))
-
-
-;; Capture templates for: TODO tasks, Notes, appointments, phone calls, meetings, and org-protocol
-(setq org-capture-templates
-      (quote (("t" "todo" entry (file "~/org/refile.org") "* TODO %?\n%U\n%a\n"))))
-
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
-
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
-(setq org-mobile-use-encryption t)
