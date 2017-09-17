@@ -11,7 +11,6 @@
 (use-package s)
 
 ;; Define some helper functions
-
 (defun configure ()
   "Edit the `user-init-file'."
   (interactive)
@@ -20,61 +19,14 @@
 ;; setup theme
 (use-package leuven-theme)
 (load-theme 'leuven t)
-;;(use-package eink-theme)
-;;(load-theme 'eink t)
 (set-default-font "Inconsolata 14")
 
 ;; better defaults
-(unless (fboundp 'helm-mode)
-  (ido-mode t)
-  (setq ido-enable-flex-matching t))
-
-(menu-bar-mode -1)
-(when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
-(when (fboundp 'horizontal-scroll-bar-mode) (horizontal-scroll-bar-mode -1))
-
-(autoload 'zap-up-to-char "misc"
-  "Kill up to, but not including ARGth occurrence of CHAR." t)
-
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
-
-(require 'saveplace)
-(setq-default save-place t)
-
-(global-set-key (kbd "M-/") 'hippie-expand)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
-(global-set-key (kbd "M-z") 'zap-up-to-char)
-
-(global-set-key (kbd "C-s") 'isearch-forward-regexp)
-(global-set-key (kbd "C-r") 'isearch-backward-regexp)
-(global-set-key (kbd "C-M-s") 'isearch-forward)
-(global-set-key (kbd "C-M-r") 'isearch-backward)
-
-(defvar show-paren-delay)
-(setq show-paren-delay 0.2)
-(show-paren-mode t)
-
-(setq global-linum-mode t)
-
-(setq ring-bell-function 'ignore)
-
-(setq-default indent-tabs-mode nil)
-(setq save-interprogram-paste-before-kill t
-      apropos-do-all t
-      mouse-yank-at-point t
-      require-final-newline t
-      load-prefer-newer t
-      ediff-window-setup-function 'ediff-setup-windows-plain
-      save-place-file (concat user-emacs-directory "places")
-      backup-directory-alist `(("." . ,(concat user-emacs-directory
-                                               "backups"))))
+(use-package better-defaults)
 
 (setq inhibit-splash-screen t)
 (setq initial-scratch-message "")
-
-(add-hook 'dired-mode-hook 'dired-hide-details-mode)
+(setq global-linum-mode t)
 
 ;; Better scrolling
 (setq scroll-margin 0)
@@ -87,6 +39,8 @@
 ;; column wrap
 (setq-default fill-column 120)
 
+;; dired
+(add-hook 'dired-mode-hook 'dired-hide-details-mode)
 
 ;; Powerline
 (use-package powerline)
@@ -101,7 +55,6 @@
 
 ;; Jump
 (use-package avy)
-
 
 ;; Rest client
 (use-package restclient)
@@ -152,7 +105,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (eink-theme company-restclient restclient-company company company-mode leuven-theme material-theme avy which-key cider evil-org evil-leader magit powerline-evil powerline s use-package))))
+    (better-defaults eink-theme company-restclient restclient-company company company-mode leuven-theme material-theme avy which-key cider evil-org evil-leader magit powerline-evil powerline s use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
