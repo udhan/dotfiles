@@ -98,10 +98,13 @@
     "b" 'switch-to-buffer
     "w" 'save-buffer
     "i" 'configure
+    "<SPC>" 'other-window
+    "g" 'magit-status
     "ps" 'counsel-rg
     "j" 'avy-goto-char))
 
 (use-package evil-org)
+(use-package evil-magit)
 
 ;; cider for clojure
 (use-package cider)
