@@ -10,6 +10,10 @@
 
 ;; Add to exec path
 (setq exec-path (append exec-path '("/Users/mithunshitole/.nix-profile/bin")))
+(setq exec-path (append exec-path '("/home/mithun/.nix-profile/bin")))
+
+;; Backups
+(setq backup-directory-alist '(("" . "~/.emacs.d/backups")))
 
 ;; define some helper functions
 (defun configure ()
