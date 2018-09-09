@@ -1,14 +1,15 @@
 ;; setup package management and use-package
 (package-initialize)
-
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
 (require 'use-package)
 (setq use-package-always-ensure t)
 (use-package s)
+
+;; Add to exec path
+(setq exec-path (append exec-path '("/Users/mithunshitole/.nix-profile/bin")))
 
 ;; define some helper functions
 (defun configure ()
@@ -16,22 +17,13 @@
   (interactive)
   (find-file user-init-file))
 
-;; ---------------------------------
-
 ;; setup theme
-;; (use-package leuven-theme
-;;   :config
-;;   (load-theme 'leuven t))
-
 (use-package doom-themes
   :config
   (load-theme 'doom-one-light t))
 
-;; (use-package dracula-theme
-;;   :config
-;;   (load-theme 'dracula t))
-
-(set-default-font "inconsolata 13")
+(set-default-font "inconsolata 16")
+(setq default-frame-alist '((font . "Inconsolata-16")))
 
 ;; better defaults
 (use-package better-defaults)
@@ -45,15 +37,41 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 
 ;; column width
-(setq-default fill-column 120)
+(setq-default fill-column 80)
 
+;; better visible bell
+(setq ring-bell-function
+      (lambda ()
+        (let ((orig-fg (face-foreground 'mode-line)))
+          (set-face-foreground 'mode-line "#F2804F")
+          (run-with-idle-timer 0.1 nil
+                               (lambda (fg) (set-face-foreground 'mode-line fg))
+                               orig-fg))))
 ;; better scrolling
 (setq scroll-margin 0)
 (setq scroll-conservatively 10000)
 (setq scroll-preserve-screen-position t)
 
+;; Highlight 80 and above
+(use-package column-enforce-mode
+  :config
+  (add-hook 'prog-mode-hook 'column-enforce-mode))
+
 ;; dired
 (add-hook 'dired-mode-hook 'dired-hide-details-mode)
+
+;; sidebar
+(use-package dired-sidebar
+  :ensure t
+  :commands (dired-sidebar-toggle-sidebar)
+  :config
+  (push 'toggle-window-split dired-sidebar-toggle-hidden-commands)
+  (push 'rotate-windows dired-sidebar-toggle-hidden-commands)
+
+  (setq dired-sidebar-subtree-line-prefix "__")
+  (setq dired-sidebar-theme 'ascii)
+  (setq dired-sidebar-use-term-integration t)
+  (setq dired-sidebar-use-custom-font t))
 
 ;; powerline
 (use-package powerline
@@ -61,6 +79,11 @@
   (powerline-default-theme))
 
 (use-package powerline-evil)
+
+;; search
+(use-package rg
+  :config
+  (rg-enable-default-bindings (kbd "M-s")))
 
 ;; magit
 (use-package magit)
@@ -72,13 +95,10 @@
 ;; rest client
 (use-package restclient)
 
-
-
 ;; auto complete
 (use-package company
   :config
   (global-company-mode))
-
 (use-package company-restclient)
 (use-package company-tern)
 
@@ -90,13 +110,7 @@
   (ivy-mode 1))
 
 (use-package projectile)
-(use-package counsel-projectile
-  :bind (("c-s-p" . counsel-projectile-switch-project)
-         :map evil-normal-state-map
-         ("c-p" . counsel-projectile)))
-
-
-(use-package neotree)
+(use-package counsel-projectile)
 
 ;; evil
 (use-package evil
@@ -106,20 +120,38 @@
 (use-package evil-leader
   :config
   (global-evil-leader-mode)
-  (evil-leader/set-leader "<spc>")
+  (evil-leader/set-leader ",")
   (evil-leader/set-key
     "b" 'switch-to-buffer
     "w" 'save-buffer
     "i" 'configure
-    "<spc>" 'other-window
+    "<SPC>" 'other-window
     "g" 'magit-status
-    "ps" 'counsel-rg
-    "t" 'neotree-toggle
+    "t" 'dired-sidebar-toggle-sidebar
     "j" 'avy-goto-char
-    "c"))
+    "p" 'counsel-projectile
+    "s" 'counsel-rg))
 
 (use-package evil-org)
 (use-package evil-magit)
+
+;; help
+(use-package which-key
+  :init
+  (setq which-key-idle-delay 0.5)
+  :config
+  (which-key-mode))
+
+(use-package editorconfig
+  :ensure t
+  :config
+  (editorconfig-mode 1))
+
+(use-package window-purpose
+  :config
+  (purpose-mode 1))
+
+;; Language support -------------------------------
 
 ;; cider for clojure
 (use-package cider)
@@ -145,38 +177,24 @@
   (add-hook 'css-mode-hook  'emmet-mode))
 
 ;; dashboard
-(use-package dashboard
-  :config
-  (dashboard-setup-startup-hook))
-
-;; help
-(use-package which-key
-  :init
-  (setq which-key-idle-delay 0.5)
-  :config
-  (which-key-mode))
-
-(use-package editorconfig
-  :ensure t
-  :config
-  (editorconfig-mode 1))
+;; (use-package dashboard
+;;   :config
+;;   (dashboard-setup-startup-hook))
 
 ;; golang
 (use-package go-mode)
 
 ;; javascript
-(define-key js-mode-map (kbd "m-.") nil)
 (use-package js2-refactor)
 (use-package xref-js2)
 (use-package js2-mode)
-  ;; :init
-  ;; (add-hook 'js2-mode-hook #'js2-refactor-mode)
-  ;; (js2r-add-keybindings-with-prefix "C-c C-r")
-  ;; (define-key js2-mode-map (kbd "C-k") #'js2r-kill)
-  ;; (add-hook 'js2-mode-hook (lambda ()
-  ;;                            (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t))))
+(use-package js-doc)
 
+;; Save state of the editor
+(desktop-save-mode 1)
+(setq desktop-save t)
 
+;; Auto config -------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -184,10 +202,10 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (company-tern emmet-mode emmet parinfer go-mode dracula-theme counsel-projectile dashboard better-defaults eink-theme company-restclient restclient-company company company-mode leuven-theme material-theme avy which-key cider evil-org evil-leader magit powerline-evil powerline s use-package))))
+    (window-purpose purpose-mode column-enforce-mode rg js-doc dired-sidebar company-tern emmet-mode emmet parinfer go-mode dracula-theme counsel-projectile dashboard better-defaults eink-theme company-restclient restclient-company company company-mode leuven-theme material-theme avy which-key cider evil-org evil-leader magit powerline-evil powerline s use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
+ ;; if there is more than one, they won't work right.
  )
