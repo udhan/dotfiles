@@ -26,8 +26,14 @@
   :config
   (load-theme 'doom-one-light t))
 
-(set-default-font "inconsolata 16")
-(setq default-frame-alist '((font . "Inconsolata-16")))
+;; os specific font sizes
+(if (eq system-type 'darwin)
+    (progn
+      (set-default-font "inconsolata 16")
+      (setq default-frame-alist '((font . "Inconsolata-16"))))
+  (progn
+    (set-default-font "inconsolata 12")
+    (setq default-frame-alist '((font . "Inconsolata-12")))))
 
 ;; better defaults
 (use-package better-defaults)
@@ -111,7 +117,15 @@
   (setq ivy-use-virtual-buffers t)
   (setq enable-recursive-minibuffers t)
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+  (global-set-key "\C-s" 'swiper)
+  (global-set-key (kbd "M-x") 'counsel-M-x)
+  (global-set-key (kbd "C-x C-f") 'counsel-find-file)
+  (global-set-key (kbd "<f1> f") 'counsel-describe-function)
+  (global-set-key (kbd "<f1> v") 'counsel-describe-variable)
+  (global-set-key (kbd "<f1> l") 'counsel-find-library)
+  (global-set-key (kbd "C-x l") 'counsel-locate)
+  (define-key minibuffer-local-map (kbd "C-r") 'counsel-minibuffer-history))
 
 (use-package projectile)
 (use-package counsel-projectile)
@@ -124,7 +138,7 @@
 (use-package evil-leader
   :config
   (global-evil-leader-mode)
-  (evil-leader/set-leader ",")
+  (evil-leader/set-leader "<SPC>")
   (evil-leader/set-key
     "b" 'switch-to-buffer
     "w" 'save-buffer
@@ -134,7 +148,13 @@
     "t" 'dired-sidebar-toggle-sidebar
     "j" 'avy-goto-char
     "p" 'counsel-projectile
-    "s" 'counsel-rg))
+    "s" 'counsel-rg
+    "f" 'counsel-find-file
+    "df" 'counsel-describe-function
+    "dv" 'counsel-describe-variable
+    "l" 'counsel-locate
+    "r" 'counsel-linux-app
+    "c" 'compile))
 
 (use-package evil-org)
 (use-package evil-magit)
@@ -153,7 +173,20 @@
 
 (use-package window-purpose
   :config
-  (purpose-mode 1))
+  (purpose-mode 1)
+  (add-to-list 'purpose-user-mode-purposes
+               '((parinfer-mode . code)
+                 (python-mode . code)
+                 (go-mode . code)
+                 (js2-mode . code)
+                 (term-mode . terminal)
+                 (shell-mode . terminal)
+                 (eshell-mode . terminal)
+                 (compilation-mode . messages)))
+  ;;(add-to-list 'purpose-user-name-purposes '(<name> . <purpose>))
+  ;;(add-to-list 'purpose-user-regexp-purposes '(<pattern> . <purpose>))
+  (setq purpose-use-default-configuration t)
+  (purpose-compile-user-configuration))
 
 ;; Language support -------------------------------
 
@@ -166,11 +199,11 @@
   (progn
     (setq parinfer-extensions
           '(defaults       ; should be included.
-            pretty-parens  ; different paren styles for different modes.
-            evil           ; if you use evil.
-            paredit        ; introduce some paredit commands.
-            smart-tab      ; c-b & c-f jump positions and smart shift with tab & s-tab.
-            smart-yank))   ; yank behavior depend on mode.
+             pretty-parens  ; different paren styles for different modes.
+             evil           ; if you use evil.
+             paredit        ; introduce some paredit commands.
+             smart-tab      ; c-b & c-f jump positions and smart shift with tab & s-tab.
+             smart-yank))   ; yank behavior depend on mode.
     (add-hook 'clojure-mode-hook #'parinfer-mode)
     (add-hook 'emacs-lisp-mode-hook #'parinfer-mode)
     (add-hook 'lisp-mode-hook #'parinfer-mode)))
