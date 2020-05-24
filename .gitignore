@@ -7,3 +7,8 @@ ido.last
 places
 url
 emacs.d.symlink/elpa
+/emacs.d.symlink/.emacs.desktop
+/emacs.d.symlink/.emacs.desktop.lock
+/emacs.d.symlink/custom.el
+/emacs.d.symlink/recentf
+/emacs.d.symlink/transient/
